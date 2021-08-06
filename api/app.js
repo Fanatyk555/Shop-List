@@ -3,7 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var cors = require('cors')
+var cors = require('cors');
+var cookieParser = require('cookie-parser');
+var express = require('express');
+var timeout = require('connect-timeout');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -28,23 +31,25 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(timeout('1s'));
+app.use(cookieParser());
+app.use(haltOnTimedout);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-//Logowanie
+//wyszukaj produkt
 app.post('/selectProduct', function (req, res) {
-  //to co wysyła klient do serwera przez axios
   let product = req.body;
-  console.log(product[0]);
-  con.query(`SELECT * FROM products WHERE value LIKE '${product[0]}%'`, function (err, result, fields) {
+  let searchProduct;
+  product[0] === '' ? searchProduct = 'x' : searchProduct = product;
+  console.log("wpisywany produkt: "+product);
+  con.query(`SELECT * FROM products WHERE value LIKE '${searchProduct}%'`, function (err, result, fields) {
     if (err) throw err;
-    console.log(result);
     global.globalData = result;
   });
 })
 app.get('/selectProduct', function (req, res) {
-  //to co wysyła serwer do klienta przez fetch
   res.end(JSON.stringify(globalData));
 })
 
@@ -52,6 +57,10 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("MySQL Connected!");
 });
+
+function haltOnTimedout (req, res, next) {
+  if (!req.timedout) next()
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
