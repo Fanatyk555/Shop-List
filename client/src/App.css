@@ -13,6 +13,9 @@ body{
 .selectProduct input{
 	width: 100%;
 }
+.selectWeight input{
+	width: 100px;
+}
 .inputDropList{
 	width: 100%;
 	background-color: wheat;

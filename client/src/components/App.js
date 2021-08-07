@@ -8,7 +8,8 @@ class App extends React.Component {
   state = {
     apiResponse: [],
     value: "",
-    productsList: []
+    productsList: [],
+    productsWeight: []
   }
   componentDidMount(){
     setInterval(() => {
@@ -31,14 +32,16 @@ class App extends React.Component {
       <tr key={index}>
         <td>{item.value}</td>
         <td>{item.price}</td>
-        <td>{item.calories}</td>    
-        <td>{item.weight}</td>
-        <td>{item.fat}</td>    
-        <td>{item.carbohydrates}</td>
-        <td>{item.protein}</td>    
+        <td>{item.weight}</td>  
+        <td className="selectWeight"><input type="number" value={this.state.productsWeight[index]||100} onChange={(e)=>{this.setState(({productsWeight}) => ({
+          productsWeight: [...productsWeight.slice(0,index),[e.target.value],...productsWeight.slice(index+1)]}))}}/></td>  
+        <td>{((item.calories/100)*(this.state.productsWeight[index]||100)).toFixed(1)}</td>    
+        <td>{((item.fat/100)*(this.state.productsWeight[index]||100)).toFixed(1)}</td>    
+        <td>{((item.carbohydrates/100)*(this.state.productsWeight[index]||100)).toFixed(1)}</td>
+        <td>{((item.protein/100)*(this.state.productsWeight[index]||100)).toFixed(1)}</td>    
       </tr>));
     const productsInputList = this.state.apiResponse.map((item, index)=>(
-      <li key={index} onClick={this.handleProductToList=()=>{
+      <li key={index} onClick={()=>{
         let array=this.state.productsList;
         array.push(item);
         this.setState({ productsList: array})
@@ -56,7 +59,7 @@ class App extends React.Component {
       </>);
     console.log(productsListSummary)
     console.log(price)
-    
+    let zmienna=100;
     return (
       <>
         <div className="container-fluid text-white">
@@ -73,6 +76,7 @@ class App extends React.Component {
             <tr>
               <th scope="col">Nazwa</th>
               <th scope="col">Cena</th>
+              <th scope="col">Waga szt</th>
               <th scope="col">Waga</th>
               <th scope="col">Kalorie</th>
               <th scope="col">Tłuszcze</th>
@@ -86,8 +90,9 @@ class App extends React.Component {
               <tr>
                 <td></td>
                 <td>{price}</td>
+                <td>{weight}</td>    
+                <td></td>    
                 <td>{calories}</td>    
-                <td>{weight}</td>
                 <td>{fat}</td>    
                 <td>{carbohydrates}</td>
                 <td>{protein}</td>    
