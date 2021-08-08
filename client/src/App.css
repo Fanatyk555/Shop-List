@@ -10,8 +10,20 @@ body{
 .selectProduct{
 	width: 300px;
 }
+.selectProduct ul{
+	list-style-position: inside;
+	padding-inline-start: 0px;
+	list-style-type: none;
+}
 .selectProduct input{
 	width: 100%;
+}
+.searchProduct{
+	font-size: 20px;
+	border: 1px solid black;
+}
+.searchProduct:hover{
+	background-color: rgb(58, 185, 58);
 }
 .selectWeight input{
 	width: 100px;
